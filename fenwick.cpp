@@ -26,8 +26,8 @@ class FenwickTree{
 template <typename T>
 void FenwickTree<T>::constructTree(){
     T delta;
+    std::cout<<"Enter Elements\n";
     for(int i=0;i<size;++i){
-        std::cout<<"Enter Elements\n";
         std::cin >> delta;
         update(i,delta);
     }
@@ -37,7 +37,7 @@ T FenwickTree<T>::pointQuery(int p){
     T sum = T();
     ++p;
     while(p > 0){
-        std::cout<<"INSIDE POINT "<<p<<" "<<sum<<" "<<BIT[p]<<std::endl;
+        /* std::cout<<"INSIDE POINT "<<p<<" "<<sum<<" "<<BIT[p]<<std::endl; */
         sum += BIT[p];
         p -= p & (-p);
         
@@ -58,17 +58,25 @@ void FenwickTree<T>::update(int i, T delta){
 }
 template <typename T>
 void FenwickTree<T>::display(){
+    T results[size+1];
+    std::cout << "Fenwick Array Internal: ";
     for(int i=0;i<=size;i++){
         std::cout<<BIT[i]<<" ";
+        results[i] = pointQuery(i);
+    }
+    std::cout<<"\n";
+    std::cout << "Cumulative Array:       ";
+    for(int i = 0; i < size; i++) {
+        std::cout << results[i] << " ";
     }
     std::cout<<"\n";
 }
 
 int main(){
-    int n=10;
-    FenwickTree<float> a(n);  //declare type here
+    int n=12;
+    FenwickTree<int> a(n);  //declare type here
     a.constructTree();
-    std::cout<<a.pointQuery(4)<<std::endl;
+    std::cout<<a.pointQuery(5)<<std::endl;
     std::cout<<a.rangeQuery(4,9)<<std::endl;
     a.display();
     return 0;
