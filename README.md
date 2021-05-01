@@ -16,3 +16,5 @@ To build and run the normal-1d use
 make non-generic
 ./non-generic < ../in
 ```
+
+To change the input, replace in with whatever

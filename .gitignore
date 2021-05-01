@@ -1,2 +1,4 @@
 .git
 build
+compile_*
+.cache/
