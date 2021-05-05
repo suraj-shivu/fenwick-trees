@@ -2,3 +2,4 @@
 build
 compile_*
 .cache/
+.vscode
