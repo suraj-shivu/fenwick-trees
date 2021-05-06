@@ -109,11 +109,11 @@ class Fenwick_Tree{
 	    T range_query(int r, int l);
 	    void update(int i, const T delta);
         void update(int i, int j, const T delta);
-        friend bool operator==(const Fenwick_Tree& a, const Fenwick_Tree& b){
-            return a.size()==b.size() && std::equal(a.begin(),a.end(),b.begin());
+        inline bool operator==(const Fenwick_Tree& b){
+            return this->size()==b.size() && std::equal(this->begin(),this->end(),b.begin());
         }
-        friend bool operator!=(const Fenwick_Tree& a, const Fenwick_Tree& b){
-            return !(a==b);
+        inline bool operator!=(const Fenwick_Tree& b){
+            return !(*this==b);
         }
         //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
         void display();
