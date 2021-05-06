@@ -7,6 +7,8 @@ An implementation of the [fenwick tree](https://en.wikipedia.org/wiki/Fenwick_tr
 3. Point Update
 4. Range Update
 
+The tree is internally indexed from 1 to n, rather than 0 to n-1.
+
 Tree Construction takes ``` O(n)``` time where ``` n ``` is the size of the input array.
 All other operations take ``` O(log(n))``` time to execute.
 
@@ -19,6 +21,18 @@ They are :-
 - ```Fenwick_Tree(const Fenwick_Tree&)```: Copy constructor.
 
 We make use of two helper functions ```make_tree``` and ```construct_tree``` to store the values in the structure.
+
+We have defined the meaning of the copy assignment operator for the same, while also defining the rules for `==`, `!=`, and `<<`.
+
+We have mainly defined three functions for the operations specified before, they are:-
+1. `point_query(int p)`: Sum from first position till point p
+2. `range_query(int l, int r)`: Sum from l to r 
+3. `update(int i, T delta)`: Update position i by adding delta.
+4. `update(int i, int j, T delta)`: Add delta to all values from i to j.
+
+*please add more details for iterators below*
+
+We have also implemented a forward iterator to traverse and access the values stored in the fenwick tree for other purposes and to interact with stl functions.
 
 --------------------------
 ### Instructions to run
