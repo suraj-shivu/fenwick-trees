@@ -60,9 +60,9 @@ class Fenwick_Tree{
                 inp_array_[std::distance(begin, it) + 1] = val;
                 for(auto i = std::distance(begin, it); i < size; i = i | (i+1) ){
                     tree_[i+1] += val;
-                    display();
+                    //display();
                 }
-                std::cout<<std::endl;
+                //std::cout<<std::endl;
             }
 
         }
@@ -121,6 +121,11 @@ class Fenwick_Tree{
         }
         inline bool operator!=(const Fenwick_Tree& b){
             return !(*this==b);
+        }
+        T operator[](int p){
+            if(p<0 || p > size_+ 1)
+                throw std::out_of_range("Index out of range");
+            return tree_[p];
         }
         //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
 	friend std::ostream& operator<<(std::ostream& os,const Fenwick_Tree& obj)
