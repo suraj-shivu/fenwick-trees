@@ -105,7 +105,7 @@ class Fenwick_Tree{
             return size_;
         }
         void construct_tree();
-        T point_query(int p);
+        T point_query(int p) const;
 	    T range_query(int r, int l);
 	    void update(int i, const T delta);
         void update(int i, int j, const T delta);
@@ -116,6 +116,27 @@ class Fenwick_Tree{
             return !(*this==b);
         }
         //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
+	friend std::ostream& operator<<(std::ostream& os,const Fenwick_Tree& obj)
+        {
+            T results[obj.size_+1];
+            os << "fenwick array internal: ";
+            for(int i=0;i<=obj.size_;i++){
+                os<<obj.tree_[i]<<" ";
+                results[i+1] = obj.point_query(i);
+            }
+            os<<"\n";
+            os << "Cumulative Array:       ";
+            for(int i = 1; i <= obj.size_; i++) {
+                os << results[i] << " ";
+            }
+            os<<"\n";
+            os<< "Init Array:       ";
+            for(int i = 1; i <= obj.size_; i++) {
+                os<< obj.inp_array_[i] << " ";
+            }
+            os<<"\n";
+            return os;
+        }
         void display();
 
 };
@@ -130,7 +151,7 @@ void Fenwick_Tree<T>::construct_tree(){
 }
 
 template <typename T>
-T Fenwick_Tree<T>::point_query(int p){
+T Fenwick_Tree<T>::point_query(int p) const{
     T sum = T();
     ++p;
     if(p < 0 || p > size_+1)
