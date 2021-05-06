@@ -4,21 +4,24 @@
 #include "generic_1D/fenwick_edit.hpp"
 int main(){
     int n=10;
-    Fenwick_Tree<double> a(n);  //declare type here
+    //Fenwick_Tree<double> a(n); //declare type here
     std::vector<double> b{1,2,3,4,5,6,7,8,9,10};
-    a.make_tree(b.begin(),b.end(),b.size());
+    Fenwick_Tree<double> a(b.begin(),b.end());
+    //a.make_tree(b.begin(),b.end(),b.size());
     //a.construct_tree();
     //b[0]=2;
-    Fenwick_Tree<double> c(a);
-    Fenwick_Tree<double> d(a);
+     Fenwick_Tree<double> c(a);
+    // Fenwick_Tree<double> d(a);
     std::cout<<std::boolalpha;
     std::cout<< (a==c) << std::endl;
-    std::cout<< (a==d) << std::endl;
+    std::cout<< (a!=c) << std::endl;
     std::cout<<a.point_query(5)<<std::endl;
     std::cout<<a.range_query(4,9)<<std::endl;
-    c.update(1,3,2);
-    std::cout<<a;
-    c.display();
+
+    a.update(1,3,2);
+    std::cout<<"Before cout"<<std::endl;
+    std::cout<< a;
+    //b.display();
     //stl testing
 
     //find

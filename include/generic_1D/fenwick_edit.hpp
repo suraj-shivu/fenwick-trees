@@ -1,12 +1,4 @@
-/* TODO:
-        ostream op
-        member initialization list constructor
-        error handling
-   WORK DONE: 
-        This is just a edit of the original + few constructors + range update
-        Done in a separate file to test and compare with original.
-        works fine to me as of now
-*/
+
 #include<iostream>
 #include<algorithm>
 #include<iterator>
@@ -46,6 +38,10 @@ class Fenwick_Tree{
             cop_tree.~Fenwick_Tree();
             return new_tree;
         }
+        Fenwick_Tree& operator=(const std::initializer_list<T> li){
+            Fenwick_Tree<T> new_tree(li.begin(),li.end());
+            return new_tree;
+        }
         template<class ForwardIterator>
         Fenwick_Tree(ForwardIterator begin, ForwardIterator end){
             size_ = std::distance(begin, end);
@@ -54,9 +50,9 @@ class Fenwick_Tree{
             for(int i=0;i<=size_;i++){
                 tree_[i] = T();
             }
-            make_tree(begin, end, size_);
+            make_tree(begin,end,size_);
         }
-        
+
         template<class ForwardIterator>
         void make_tree(ForwardIterator begin, ForwardIterator end, int size){
             for(auto it = begin; it < end; ++it){
@@ -64,11 +60,21 @@ class Fenwick_Tree{
                 inp_array_[std::distance(begin, it) + 1] = val;
                 for(auto i = std::distance(begin, it); i < size; i = i | (i+1) ){
                     tree_[i+1] += val;
-                    //display();
+                    display();
                 }
-                //std::cout<<std::endl;
+                std::cout<<std::endl;
             }
 
+        }
+        
+        Fenwick_Tree(std::initializer_list<T> k){
+            size_ = k.size();
+            tree_ = new T[size_+1];
+            inp_array_ = new T[size_+1];
+            for(int i=0;i<=size_;i++){
+                tree_[i] = T();
+            }
+            make_tree(k.begin(), k.end(), size_);
         }
 
         ~Fenwick_Tree(){
@@ -92,6 +98,7 @@ class Fenwick_Tree{
             Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
             friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
             friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
+            friend bool operator< (const Iterator& a, const Iterator& b) { return a.m_ptr < b.m_ptr; };
             friend T operator- (const Iterator a, const Iterator b) { return a.m_ptr - b.m_ptr; };
             friend T operator+ (const Iterator a, const Iterator b) { return a.m_ptr + b.m_ptr; };    
 
@@ -118,7 +125,7 @@ class Fenwick_Tree{
         //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
 	friend std::ostream& operator<<(std::ostream& os,const Fenwick_Tree& obj)
         {
-            T results[obj.size_+1];
+            T* results = new T[obj.size_ + 1] ;
             os << "fenwick array internal: ";
             for(int i=0;i<=obj.size_;i++){
                 os<<obj.tree_[i]<<" ";
@@ -135,6 +142,7 @@ class Fenwick_Tree{
                 os<< obj.inp_array_[i] << " ";
             }
             os<<"\n";
+            delete [] results;
             return os;
         }
         void display();
@@ -192,27 +200,6 @@ void Fenwick_Tree<T>::update(int i,int j ,T delta){
         i += i & (-i);
     }
 }
-// template<typename T>
-// std::ostream& Fenwick_Tree<T>::operator<<(std::ostream& os, const Fenwick_Tree<T>& obj){
-//     T results[size_+1];
-//     os << "fenwick array internal: ";
-//     for(int i=0;i<=size_;i++){
-//         os<<tree_[i]<<" ";
-//         results[i+1] = point_query(i);
-//     }
-//     os<<"\n";
-//     os << "Cumulative Array:       ";
-//     for(int i = 1; i <= size_; i++) {
-//         os << results[i] << " ";
-//     }
-//     os<<"\n";
-//     os<< "Init Array:       ";
-//     for(int i = 1; i <= size_; i++) {
-//         os<< inp_array_[i] << " ";
-//     }
-//     os<<"\n";
-//     return os;
-// }
 
 template <typename T>
 void Fenwick_Tree<T>::display(){
