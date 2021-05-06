@@ -17,7 +17,7 @@ int main(){
     std::cout<<a.point_query(5)<<std::endl;
     std::cout<<a.range_query(4,9)<<std::endl;
     c.update(1,3,2);
-    //std::cout<<a;
+    std::cout<<a;
     c.display();
     //stl testing
 
