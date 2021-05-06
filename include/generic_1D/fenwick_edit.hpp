@@ -1,8 +1,6 @@
 /* TODO:
-        Few operators
-        convert to stl definition
-        i cant figure out how to overload replace without making it a member/friend function
-        static type checks
+        ostream op
+        member initialization list constructor
         error handling
    WORK DONE: 
         This is just a edit of the original + few constructors + range update
@@ -80,7 +78,7 @@ class Fenwick_Tree{
 
         struct Iterator 
         {
-            using iterator_category = std::bidirectional_iterator_tag;
+            using iterator_category = std::forward_iterator_tag;
             using difference_type   = std::ptrdiff_t;
             using value_type        = T;
             using pointer           = T*;
@@ -101,9 +99,9 @@ class Fenwick_Tree{
             pointer m_ptr;
         };
 
-        Iterator begin() { return Iterator(&tree_[0]); }
-        Iterator end()   { return Iterator(&tree_[size_+1]);}
-        int size(){
+        Iterator begin() const { return Iterator(&tree_[0]); }
+        Iterator end() const  { return Iterator(&tree_[size_+1]);}
+        int size() const{
             return size_;
         }
         void construct_tree();
@@ -111,6 +109,13 @@ class Fenwick_Tree{
 	    T range_query(int r, int l);
 	    void update(int i, const T delta);
         void update(int i, int j, const T delta);
+        friend bool operator==(const Fenwick_Tree& a, const Fenwick_Tree& b){
+            return a.size()==b.size() && std::equal(a.begin(),a.end(),b.begin());
+        }
+        friend bool operator!=(const Fenwick_Tree& a, const Fenwick_Tree& b){
+            return !(a==b);
+        }
+        //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
         void display();
 
 };
@@ -166,7 +171,27 @@ void Fenwick_Tree<T>::update(int i,int j ,T delta){
         i += i & (-i);
     }
 }
-
+// template<typename T>
+// std::ostream& Fenwick_Tree<T>::operator<<(std::ostream& os, const Fenwick_Tree<T>& obj){
+//     T results[size_+1];
+//     os << "fenwick array internal: ";
+//     for(int i=0;i<=size_;i++){
+//         os<<tree_[i]<<" ";
+//         results[i+1] = point_query(i);
+//     }
+//     os<<"\n";
+//     os << "Cumulative Array:       ";
+//     for(int i = 1; i <= size_; i++) {
+//         os << results[i] << " ";
+//     }
+//     os<<"\n";
+//     os<< "Init Array:       ";
+//     for(int i = 1; i <= size_; i++) {
+//         os<< inp_array_[i] << " ";
+//     }
+//     os<<"\n";
+//     return os;
+// }
 
 template <typename T>
 void Fenwick_Tree<T>::display(){
