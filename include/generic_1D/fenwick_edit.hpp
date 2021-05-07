@@ -1,28 +1,61 @@
-
 #include<iostream>
 #include<algorithm>
 #include<iterator>
+#include<type_traits>
 
-template <typename T>
+template<typename T>
+struct add {
+	T operator() (T x, T y) const {
+		return x + y;
+	}
+};
+
+template<typename T>
+struct sub {
+	T operator() (T x, T y) const {
+		return x - y;
+	}
+};
+
+template<typename T>
+struct mul {
+	public:
+	T operator() (T x, T y) const {
+		return x * y;
+	}
+};
+
+template <typename T, typename T_op=add<T>>
 class Fenwick_Tree{
     private:
         int size_;
         T* tree_;
         T* inp_array_;
+		T_op oper_;
     public:
         // constructors
-        Fenwick_Tree():size_(0), tree_(new T[1]), inp_array_(new T[1]){ tree_[0]=T(); inp_array_[0]=T(); }
+        Fenwick_Tree():size_(0), tree_(new T[1]), inp_array_(new T[1]), oper_(new T_op()){ 
+			tree_[0]=T(); 
+			inp_array_[0]=T();
+			if (std::is_same<T_op, mul<T>>::value){
+				tree_[0] = T() + 1;
+			}
+		}
         
         explicit Fenwick_Tree(int n):size_(n), tree_(new T[n+1]), inp_array_(new T[n+1]){
             for(int i=0;i<n;++i){
                 tree_[i]=T();
             }
+			if (std::is_same<T_op, mul<T>>::value){
+				tree_[0] = T() + 1;
+			}
         }
         //copy constructor        
         Fenwick_Tree(const Fenwick_Tree& cop_tree){
             size_ = cop_tree.size_;
             tree_ = new T[size_+1];
             inp_array_ = new T[size_+1]; 
+			oper_ = cop_tree.oper_;
             for(int i=0;i <= size_; ++i){
                 tree_[i] = cop_tree.tree_[i];
                 inp_array_[i] = cop_tree.inp_array_[i];  
@@ -47,9 +80,15 @@ class Fenwick_Tree{
             size_ = std::distance(begin, end);
             tree_ = new T[size_+1];
             inp_array_ = new T[size_+1];
-            for(int i=0;i<=size_;i++){
-                tree_[i] = T();
-            }
+			if (std::is_same<T_op, mul<T>>::value){
+				for(int i=0;i<=size_;i++){
+					tree_[i] = T() + 1;
+				}
+			} else {
+				for(int i=0;i<=size_;i++){
+					tree_[i] = T();
+				}
+			}
             make_tree(begin,end,size_);
         }
 
@@ -59,10 +98,8 @@ class Fenwick_Tree{
                 auto val = *it;
                 inp_array_[std::distance(begin, it) + 1] = val;
                 for(auto i = std::distance(begin, it); i < size; i = i | (i+1) ){
-                    tree_[i+1] += val;
-                    //display();
+                    tree_[i+1] = oper_(tree_[i+1], val);
                 }
-                //std::cout<<std::endl;
             }
 
         }
@@ -71,9 +108,16 @@ class Fenwick_Tree{
             size_ = k.size();
             tree_ = new T[size_+1];
             inp_array_ = new T[size_+1];
-            for(int i=0;i<=size_;i++){
-                tree_[i] = T();
-            }
+			if (std::is_same<T_op, mul<T>>::value){
+				/* tree_[0] = T() + 1; */
+				for(int i=0;i<=size_;i++){
+					tree_[i] = T() + 1;
+				}
+			} else {
+				for(int i=0;i<=size_;i++){
+					tree_[i] = T();
+				}
+			}
             make_tree(k.begin(), k.end(), size_);
         }
 
@@ -127,13 +171,12 @@ class Fenwick_Tree{
                 throw std::out_of_range("Index out of range");
             return tree_[p];
         }
-        //friend std::ostream& operator<<(std::ostream& os, const Fenwick_Tree& obj);
 	friend std::ostream& operator<<(std::ostream& os,const Fenwick_Tree& obj)
         {
             T* results = new T[obj.size_ + 1] ;
             os << "fenwick array internal: ";
-            for(int i=0;i<=obj.size_;i++){
-                os<<obj.tree_[i]<<" ";
+            for(int i=0;i<obj.size_;i++){
+                os<<obj.tree_[i+1]<<" ";
                 results[i+1] = obj.point_query(i);
             }
             os<<"\n";
@@ -142,7 +185,7 @@ class Fenwick_Tree{
                 os << results[i] << " ";
             }
             os<<"\n";
-            os<< "Init Array:       ";
+            os<< "Init Array:              ";
             for(int i = 1; i <= obj.size_; i++) {
                 os<< obj.inp_array_[i] << " ";
             }
@@ -153,8 +196,8 @@ class Fenwick_Tree{
         void display();
 
 };
-template <typename T>
-void Fenwick_Tree<T>::construct_tree(){
+template <typename T, typename T_op>
+void Fenwick_Tree<T, T_op>::construct_tree(){
     T delta;
     std::cout<<"Enter Elements\n";
     for(int i=0;i<size_;++i){
@@ -163,51 +206,60 @@ void Fenwick_Tree<T>::construct_tree(){
     }
 }
 
-template <typename T>
-T Fenwick_Tree<T>::point_query(int p) const{
-    T sum = T();
+template <typename T, typename T_op>
+T Fenwick_Tree<T, T_op>::point_query(int p) const{
+    T res = T();
+	if (std::is_same<T_op, mul<T>>::value) {
+		res += 1;
+	}
     ++p;
-    if(p < 0 || p > size_+1)
+    if(p < 0 || p > size_)
         throw std::out_of_range("Query out of range");
     while(p > 0){
-        /* std::cout<<"INSIDE POINT "<<p<<" "<<sum<<" "<<BIT[p]<<std::endl; */
-        sum += tree_[p];
+        res = oper_(res, tree_[p]);
         p -= p & (-p);
         
     }
-    return sum;
+    return res;
 }
-template <typename T>
-T Fenwick_Tree<T>::range_query(int l, int r){
+template <typename T, typename T_op>
+T Fenwick_Tree<T, T_op>::range_query(int l, int r){
+	if (std::is_same<T_op, mul<T>>::value) {
+		return point_query(r) / point_query(l);
+	}
     return point_query(r) - point_query(l);
 }
-template <typename T>
-void Fenwick_Tree<T>::update(int i, T delta){
+template <typename T, typename T_op>
+void Fenwick_Tree<T, T_op>::update(int i, T delta){
     ++i;
-    inp_array_[i] += delta;
+    inp_array_[i] = oper_(inp_array_[i], delta);
     while(i <= size_){
-        tree_[i] += delta;
+        tree_[i] = oper_(tree_[i], delta);
         i += i & (-i);
     }
 }
-template <typename T>
-void Fenwick_Tree<T>::update(int i,int j ,T delta){
+template <typename T, typename T_op>
+void Fenwick_Tree<T, T_op>::update(int i,int j ,T delta){
     for (int k = i; k <= j;++k){
-        inp_array_[k] += delta;
+		inp_array_[i] = oper_(inp_array_[i], delta);
     }
     ++j;
     while(j <= size_){
-        tree_[j] += -delta;
+		if (std::is_same<T_op, mul<T>>::value) {
+			tree_[j] = oper_(tree_[j], 1/delta);
+		} else {
+			tree_[j] = oper_(tree_[j], -delta);
+		}
         j += j & (-j);
     }
     while(i <= size_){
-        tree_[i] += delta;
+        tree_[i] = oper_(tree_[i], delta);
         i += i & (-i);
     }
 }
 
-template <typename T>
-void Fenwick_Tree<T>::display(){
+template <typename T, typename T_op>
+void Fenwick_Tree<T, T_op>::display(){
     T results[size_+1];
     std::cout << "fenwick array internal: ";
     for(int i=0;i<=size_;i++){
