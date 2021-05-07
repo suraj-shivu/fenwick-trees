@@ -63,11 +63,7 @@ class Fenwick_Tree{
         }
         // copy assignment
         Fenwick_Tree& operator=(const Fenwick_Tree& cop_tree){
-            Fenwick_Tree<T> new_tree(cop_tree.size_);
-            for(int i=0;i <= size_; ++i){
-                tree_[i] = cop_tree.tree_[i];
-                inp_array_[i] = cop_tree.inp_array_[i];  
-            }
+            Fenwick_Tree<T> new_tree(cop_tree);
             cop_tree.~Fenwick_Tree();
             return new_tree;
         }

@@ -29,6 +29,12 @@ int main(){
 	std::cout << "Printing Fenwick_Tree<double>.\n";
 	std::cout << d << '\n';
 	std::cout << "\n\n";
+
+	std::cout << "Checking copy assignment.\n";
+	Fenwick_Tree<double, mul<double>> e = d;
+	std::cout << "Printing Fenwick_Tree<double>.\n";
+	std::cout << e << '\n';
+	std::cout << "\n\n";
     
 	std::cout<<std::boolalpha;
 	std::cout << "comparing a and c\n";
