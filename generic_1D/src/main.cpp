@@ -17,7 +17,32 @@ int main(){
     //b[0]=2;
      Fenwick_Tree<std::complex<int> > c(a);
     // Fenwick_Tree<double> d(a);
-
+    
+    std::cout << "Declaring complex fenwick tree using iterators of vector<complex<int>>.\n";
+    int n=4;
+    //Fenwick_Tree<double> a(n); //declare type here
+    std::vector<std::complex<int>> b(n);
+    b[0] = {1,3};
+    b[1] = {2,4};
+    b[2] = {3,5};
+    b[3] = {4,6};
+    Fenwick_Tree<std::complex<int> > a(b.begin(),b.end());
+	std::cout << "Printing Fenwick_Tree<complex<int>>.\n";
+	std::cout << a ;
+    //a.make_tree(b.begin(),b.end(),b.size());
+    //a.construct_tree();
+    //b[0]=2;
+	std::cout << "Initializing a new fenwick tree using copy constructor by copying the previously constructed tree.\n";
+    Fenwick_Tree<std::complex<int>> c(a);
+	std::cout << "Printing fenwick tree created by copy constructor\n";
+	std::cout << c;
+	/* std::cout << c << '\n'; */
+    // Fenwick_Tree<double> d(a);
+	std::vector<double> dbl = {1.1, 2.2, 3.3, 4.4};
+	std::cout << "Declaring complex fenwick tree using iterators of vector<double>.\n";
+	Fenwick_Tree<double> d(dbl.begin(), dbl.end());
+	std::cout << "Printing Fenwick_Tree<double>.\n";
+	std::cout << d << '\n';
 
     std::cout<<std::boolalpha;
     std::cout<< (a==c) << std::endl;
