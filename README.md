@@ -30,9 +30,14 @@ We have mainly defined three functions for the operations specified before, they
 3. `update(int i, T delta)`: Update position i by adding delta.
 4. `update(int i, int j, T delta)`: Add delta to all values from i to j.
 
-*please add more details for iterators below*
 
 We have also implemented a forward iterator to traverse and access the values stored in the fenwick tree for other purposes and to interact with stl functions.
+
+Rules for `value_type`, `pointer`, `refernce`, etc. of the class have been defined.
+
+Operators such as `==`, `!=`, `<`, `-`, `+` and more have rules defined for them in the iterator for iterator operatons.
+
+The `begin()` and `end()` functions have been provided in the iterator to return the appropriate values for stl compatibility.
 
 --------------------------
 ### Instructions to run
