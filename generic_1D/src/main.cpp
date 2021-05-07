@@ -30,8 +30,9 @@ int main(){
 	std::cout << d << '\n';
 	std::cout << "\n\n";
 
+    Fenwick_Tree<double, mul<double>> f {1.1, 2.2, 3.3 ,4.4};
 	std::cout << "Checking copy assignment.\n";
-	Fenwick_Tree<double, mul<double>> e = d;
+	Fenwick_Tree<double, mul<double>> e = f;
 	std::cout << "Printing Fenwick_Tree<double>.\n";
 	std::cout << e << '\n';
 	std::cout << "\n\n";
