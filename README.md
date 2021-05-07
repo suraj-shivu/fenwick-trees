@@ -39,6 +39,9 @@ Operators such as `==`, `!=`, `<`, `-`, `+` and more have rules defined for them
 
 The `begin()` and `end()` functions have been provided in the iterator to return the appropriate values for stl compatibility.
 
+
+Generic functor support for addition, subtraction, and multiplication has been added.
+
 --------------------------
 ### Instructions to run
 
